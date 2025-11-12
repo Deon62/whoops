@@ -3,93 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - FailShare</title>
+    <title>Profile - Whoops</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-content">
-                <h2 class="page-title">My Profile</h2>
-                <button class="settings-btn">⚙️</button>
-            </div>
-        </header>
-        
         <!-- Profile Content -->
         <main class="profile-container">
             <div class="profile-header">
-                <div class="profile-avatar-large">👤</div>
+                <div class="profile-avatar-large">JD</div>
                 <h2 class="profile-name">John Doe</h2>
-                <p class="profile-bio">Professional failure since 2020 | Learning from mistakes daily 🚀</p>
                 <button class="edit-profile-btn">Edit Profile</button>
             </div>
             
-            <div class="stats-container">
-                <div class="stat-box">
-                    <p class="stat-number">47</p>
-                    <p class="stat-label">Failures</p>
-                </div>
-                <div class="stat-box">
-                    <p class="stat-number">892</p>
-                    <p class="stat-label">Supporters</p>
-                </div>
-                <div class="stat-box">
-                    <p class="stat-number">1.2K</p>
-                    <p class="stat-label">Lessons</p>
-                </div>
-            </div>
-            
-            <div class="achievements-section">
-                <h3 class="section-title">Failure Badges 🏆</h3>
-                <div class="badges-grid">
-                    <div class="badge-item">
-                        <span class="badge-icon">🔥</span>
-                        <p class="badge-name">Hot Streak</p>
-                    </div>
-                    <div class="badge-item">
-                        <span class="badge-icon">💪</span>
-                        <p class="badge-name">Comeback Kid</p>
-                    </div>
-                    <div class="badge-item">
-                        <span class="badge-icon">🎯</span>
-                        <p class="badge-name">Lesson Master</p>
-                    </div>
-                    <div class="badge-item locked">
-                        <span class="badge-icon">🌟</span>
-                        <p class="badge-name">Epic Failure</p>
-                    </div>
-                </div>
-            </div>
-            
             <div class="posts-section">
-                <h3 class="section-title">My Recent Failures</h3>
+                <h3 class="section-title">My Posts</h3>
                 
                 <div class="profile-post-card">
                     <div class="post-date">2 days ago</div>
-                    <p class="post-text">Sent a personal email to the entire company. Still getting replies... 😅</p>
+                    <p class="post-text">Sent a personal email to the entire company. Still getting replies...</p>
                     <div class="post-stats">
-                        <span>❤️ 234</span>
-                        <span>💬 56</span>
+                        <span>234 likes</span>
+                        <span>56 comments</span>
                     </div>
                 </div>
                 
                 <div class="profile-post-card">
                     <div class="post-date">5 days ago</div>
-                    <p class="post-text">Studied for the wrong exam. Aced it anyway... but it was the wrong subject 🤦</p>
+                    <p class="post-text">Studied for the wrong exam. Aced it anyway... but it was the wrong subject</p>
                     <div class="post-stats">
-                        <span>❤️ 189</span>
-                        <span>💬 43</span>
+                        <span>189 likes</span>
+                        <span>43 comments</span>
                     </div>
                 </div>
                 
                 <div class="profile-post-card">
                     <div class="post-date">1 week ago</div>
-                    <p class="post-text">Wore my shirt inside out for an entire workday. Nobody told me. 💀</p>
+                    <p class="post-text">Wore my shirt inside out for an entire workday. Nobody told me.</p>
                     <div class="post-stats">
-                        <span>❤️ 456</span>
-                        <span>💬 89</span>
+                        <span>456 likes</span>
+                        <span>89 comments</span>
                     </div>
                 </div>
             </div>
@@ -98,15 +52,31 @@
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <button class="nav-item" data-page="feed">
-                <span class="nav-icon">🏠</span>
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </span>
                 <span class="nav-label">Feed</span>
             </button>
             <button class="nav-item" data-page="create">
-                <span class="nav-icon">➕</span>
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </span>
                 <span class="nav-label">Post</span>
             </button>
             <button class="nav-item active" data-page="profile">
-                <span class="nav-icon">👤</span>
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
                 <span class="nav-label">Profile</span>
             </button>
         </nav>
