@@ -3,6 +3,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*:focus {
+    outline: none;
 }
 
 :root {
@@ -19,11 +24,12 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
     background-color: var(--secondary-color);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.5;
     overflow-x: hidden;
+    font-size: 14px;
 }
 
 /* App Container */
@@ -33,49 +39,8 @@ body {
     background-color: var(--secondary-color);
     min-height: 100vh;
     position: relative;
-    padding-bottom: 80px;
-}
-
-/* Header */
-.app-header {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow);
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-small {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.logo-small .logo-icon {
-    font-size: 1.5rem;
-}
-
-.logo-small .logo-text {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.header-stats {
-    font-size: 0.85rem;
-    opacity: 0.9;
-}
-
-.page-title {
-    font-size: 1.2rem;
-    font-weight: 600;
+    padding-bottom: 70px;
+    padding-top: 1rem;
 }
 
 /* Bottom Navigation */
@@ -106,8 +71,14 @@ body {
     color: var(--text-light);
     cursor: pointer;
     padding: 0.5rem 1.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     flex: 1;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.nav-item:focus {
+    outline: none;
 }
 
 .nav-item:hover {
@@ -115,22 +86,31 @@ body {
     transform: translateY(-2px);
 }
 
-.nav-item.active {
-    color: var(--primary-color);
-    font-weight: 600;
+.nav-item:active {
+    transform: translateY(0);
 }
 
-.nav-item.active .nav-icon {
-    transform: scale(1.2);
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+.nav-item.active .nav-icon svg {
+    stroke-width: 2.5;
 }
 
 .nav-icon {
-    font-size: 1.5rem;
-    transition: transform 0.3s ease;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
 .nav-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
 
 /* Buttons */
@@ -139,13 +119,19 @@ body {
     background-color: var(--primary-color);
     color: var(--secondary-color);
     border: none;
-    padding: 1rem 2rem;
+    padding: 0.875rem 2rem;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary:focus,
+.cta-button:focus {
+    outline: none;
 }
 
 .btn-primary:hover,
@@ -155,47 +141,34 @@ body {
     box-shadow: var(--shadow-hover);
 }
 
+.btn-primary:active,
+.cta-button:active {
+    transform: translateY(0);
+}
+
 .btn-secondary {
     background-color: var(--secondary-color);
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
-    padding: 1rem 2rem;
+    padding: 0.875rem 2rem;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-secondary:focus {
+    outline: none;
 }
 
 .btn-secondary:hover {
     background-color: var(--background-light);
 }
 
-.back-btn {
-    background: none;
-    border: none;
-    color: var(--secondary-color);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: opacity 0.3s ease;
-}
-
-.back-btn:hover {
-    opacity: 0.8;
-}
-
-.settings-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: transform 0.3s ease;
-}
-
-.settings-btn:hover {
-    transform: rotate(90deg);
+.btn-secondary:active {
+    transform: scale(0.98);
 }
 
 /* Utility Classes */
@@ -203,11 +176,11 @@ body {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .section-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 1rem;

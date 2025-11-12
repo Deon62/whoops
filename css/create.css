@@ -1,63 +1,37 @@
 /* Create Post Page Styles */
 .create-container {
-    padding: 1.5rem;
-    padding-bottom: 2rem;
+    padding: 1rem;
+    padding-bottom: 1.5rem;
 }
 
 .create-card {
     background-color: var(--secondary-color);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1.5rem;
     animation: fadeIn 0.5s ease;
 }
 
-/* Emoji Picker */
-.emoji-picker {
-    margin-bottom: 2rem;
-}
-
-.emoji-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-}
-
-.emoji-btn {
-    width: 50px;
-    height: 50px;
-    background-color: var(--background-light);
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.emoji-btn:hover {
-    transform: scale(1.15);
-    border-color: var(--primary-color);
-}
-
-.emoji-btn.selected {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    transform: scale(1.2);
+.page-title-create {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .failure-input,
 .lesson-input {
     width: 100%;
-    padding: 1rem;
+    padding: 0.875rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-family: inherit;
     color: var(--text-primary);
     transition: all 0.3s ease;
@@ -72,15 +46,15 @@
 }
 
 .failure-input {
-    min-height: 150px;
-    line-height: 1.6;
+    min-height: 120px;
+    line-height: 1.5;
 }
 
 .char-count {
     text-align: right;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: var(--text-light);
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
 }
 
 /* Tags Input */
