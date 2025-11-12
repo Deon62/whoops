@@ -105,32 +105,9 @@ function handleSettings() {
 }
 
 
-function animateProfile() {
-    // Animate stats
-    const statBoxes = document.querySelectorAll('.stat-box');
-    statBoxes.forEach((box, index) => {
-        box.style.opacity = '0';
-        box.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            box.style.transition = 'all 0.5s ease';
-            box.style.opacity = '1';
-            box.style.transform = 'translateY(0)';
-        }, index * 100);
-    });
-    
-    // Animate badges
-    const badges = document.querySelectorAll('.badge-item');
-    badges.forEach((badge, index) => {
-        badge.style.opacity = '0';
-        badge.style.transform = 'scale(0.8)';
-        
-        setTimeout(() => {
-            badge.style.transition = 'all 0.5s ease';
-            badge.style.opacity = '1';
-            badge.style.transform = 'scale(1)';
-        }, 500 + (index * 100));
-    });
+async function animateProfile() {
+    // Load user's posts from database
+    await loadUserPosts();
     
     // Animate posts
     const posts = document.querySelectorAll('.profile-post-card');
@@ -142,8 +119,69 @@ function animateProfile() {
             post.style.transition = 'all 0.5s ease';
             post.style.opacity = '1';
             post.style.transform = 'translateX(0)';
-        }, 1000 + (index * 150));
+        }, index * 150);
     });
+}
+
+async function loadUserPosts() {
+    const user = getCurrentUser();
+    const postsSection = document.querySelector('.posts-section');
+    const postsContainer = postsSection.querySelector('.profile-post-card')?.parentElement || postsSection;
+    
+    // Remove existing posts except the section title
+    const existingPosts = postsSection.querySelectorAll('.profile-post-card');
+    existingPosts.forEach(post => post.remove());
+    
+    const result = await getUserPosts(user.userId);
+    
+    if (result.success && result.data.length > 0) {
+        result.data.forEach(post => {
+            const postCard = createProfilePostCard(post);
+            postsSection.appendChild(postCard);
+        });
+    } else if (result.success && result.data.length === 0) {
+        const emptyState = document.createElement('p');
+        emptyState.className = 'empty-posts';
+        emptyState.textContent = 'No posts yet. Share your first failure!';
+        emptyState.style.textAlign = 'center';
+        emptyState.style.color = 'var(--text-secondary)';
+        emptyState.style.padding = '2rem';
+        postsSection.appendChild(emptyState);
+    }
+}
+
+function createProfilePostCard(post) {
+    const postCard = document.createElement('div');
+    postCard.className = 'profile-post-card';
+    
+    const timeAgo = getTimeAgo(new Date(post.created_at));
+    
+    postCard.innerHTML = `
+        <div class="post-date">${timeAgo}</div>
+        <p class="post-text">${escapeHtml(post.content)}</p>
+        <div class="post-stats">
+            <span>${post.likes} likes</span>
+            <span>${post.comments} comments</span>
+        </div>
+    `;
+    
+    return postCard;
+}
+
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
+    return Math.floor(seconds / 604800) + ' weeks ago';
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function showNotification(message, type) {

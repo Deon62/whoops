@@ -3,23 +3,158 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFeed();
 });
 
-function initializeFeed() {
-    // Initialize action buttons for all posts
-    const actionButtons = document.querySelectorAll('.action-btn');
+async function initializeFeed() {
+    // Load posts from database
+    await loadPosts();
     
-    actionButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            handleActionClick(this);
-        });
+    // Subscribe to real-time updates
+    subscribeToNewPosts((newPost) => {
+        prependPost(newPost);
     });
     
     // Add animation to posts on load
     animatePosts();
 }
 
-function handleActionClick(button) {
-    const icon = button.querySelector('.icon');
+async function loadPosts() {
+    const postsList = document.getElementById('postsList');
+    
+    // Show loading state
+    postsList.innerHTML = '<div class="loading">Loading fails...</div>';
+    
+    const result = await getPosts(50);
+    
+    if (result.success && result.data.length > 0) {
+        postsList.innerHTML = '';
+        result.data.forEach(post => {
+            appendPost(post);
+        });
+        
+        // Initialize action buttons
+        initializeActionButtons();
+    } else if (result.success && result.data.length === 0) {
+        postsList.innerHTML = '<div class="empty-state">No failures yet. Be the first to share!</div>';
+    } else {
+        postsList.innerHTML = '<div class="error-state">Failed to load posts. Please refresh.</div>';
+    }
+}
+
+function appendPost(post) {
+    const postsList = document.getElementById('postsList');
+    const postElement = createPostElement(post);
+    postsList.appendChild(postElement);
+}
+
+function prependPost(post) {
+    const postsList = document.getElementById('postsList');
+    
+    // Remove empty state if it exists
+    const emptyState = postsList.querySelector('.empty-state');
+    if (emptyState) {
+        emptyState.remove();
+    }
+    
+    const postElement = createPostElement(post);
+    postsList.insertBefore(postElement, postsList.firstChild);
+    
+    // Add entrance animation
+    postElement.style.opacity = '0';
+    postElement.style.transform = 'translateY(-20px)';
+    setTimeout(() => {
+        postElement.style.transition = 'all 0.5s ease';
+        postElement.style.opacity = '1';
+        postElement.style.transform = 'translateY(0)';
+    }, 10);
+    
+    initializeActionButtons();
+}
+
+function createPostElement(post) {
+    const postCard = document.createElement('div');
+    postCard.className = 'post-card';
+    postCard.dataset.postId = post.id;
+    
+    const timeAgo = getTimeAgo(new Date(post.created_at));
+    const initials = getInitials(post.user_name);
+    
+    postCard.innerHTML = `
+        <div class="post-header">
+            <div class="user-avatar-with-img">
+                <img src="profiles/${post.user_avatar}" alt="${post.user_name}" class="avatar-img">
+            </div>
+            <div class="user-info">
+                <h3 class="user-name">${escapeHtml(post.user_name)}</h3>
+                <p class="post-time">${timeAgo}</p>
+            </div>
+        </div>
+        <div class="post-content">
+            <p class="post-text">${escapeHtml(post.content)}</p>
+        </div>
+        <div class="post-actions">
+            <button class="action-btn" data-action="like" data-count="${post.likes}">
+                <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span class="count">${post.likes}</span>
+            </button>
+            <button class="action-btn" data-action="comment" data-count="${post.comments}">
+                <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="count">${post.comments}</span>
+            </button>
+            <button class="action-btn" data-action="share" data-count="${post.shares}">
+                <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                <span class="count">${post.shares}</span>
+            </button>
+        </div>
+    `;
+    
+    return postCard;
+}
+
+function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
+    return Math.floor(seconds / 604800) + ' weeks ago';
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function initializeActionButtons() {
+    const actionButtons = document.querySelectorAll('.action-btn');
+    
+    actionButtons.forEach(button => {
+        // Remove old listeners by cloning
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        newButton.addEventListener('click', function(e) {
+            handleActionClick(this);
+        });
+    });
+}
+
+async function handleActionClick(button) {
+    const action = button.getAttribute('data-action');
     const countElement = button.querySelector('.count');
+    const postCard = button.closest('.post-card');
+    const postId = postCard.dataset.postId;
     
     // Add click animation
     button.style.transform = 'scale(0.95)';
@@ -27,26 +162,32 @@ function handleActionClick(button) {
         button.style.transform = 'scale(1)';
     }, 100);
     
-    // Simulate like/comment/share action
-    if (icon.textContent === '❤️') {
-        // Toggle like
+    if (action === 'like') {
+        // Handle like action
         const currentCount = parseInt(countElement.textContent);
         
         if (button.classList.contains('liked')) {
+            // Unlike (for demo, we'll just toggle locally)
             button.classList.remove('liked');
             countElement.textContent = currentCount - 1;
-            icon.textContent = '❤️';
         } else {
+            // Like the post
             button.classList.add('liked');
             countElement.textContent = currentCount + 1;
-            icon.textContent = '💖';
+            
+            // Update in database
+            const result = await likePost(postId, currentCount);
+            if (!result.success) {
+                // Revert on error
+                button.classList.remove('liked');
+                countElement.textContent = currentCount;
+                showMessage('Failed to like post');
+            }
         }
-    } else if (icon.textContent === '💬') {
-        // Comment action
-        showMessage('Comments feature coming soon! 💬');
-    } else if (icon.textContent === '🔄') {
-        // Share action
-        showMessage('Share feature coming soon! 🔄');
+    } else if (action === 'comment') {
+        showMessage('Comments feature coming soon!');
+    } else if (action === 'share') {
+        showMessage('Share feature coming soon!');
     }
 }
 

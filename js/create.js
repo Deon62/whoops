@@ -46,8 +46,9 @@ function updateCharCount() {
 }
 
 
-function publishPost() {
+async function publishPost() {
     const failureText = document.getElementById('failureText').value.trim();
+    const postBtn = document.getElementById('postBtn');
     
     // Validation
     if (failureText === '') {
@@ -60,21 +61,27 @@ function publishPost() {
         return;
     }
     
-    // Create post object (in a real app, this would be sent to a backend)
-    const post = {
-        text: failureText,
-        timestamp: new Date().toISOString()
-    };
+    // Disable button while posting
+    postBtn.disabled = true;
+    postBtn.textContent = 'Posting...';
     
-    console.log('Publishing post:', post);
+    // Save to database
+    const result = await createPost(failureText);
     
-    // Show success message
-    showSuccessMessage();
-    
-    // Redirect to feed after 1.5 seconds
-    setTimeout(() => {
-        navigateToFeed();
-    }, 1500);
+    if (result.success) {
+        // Show success message
+        showSuccessMessage();
+        
+        // Redirect to feed after 1.5 seconds
+        setTimeout(() => {
+            navigateToFeed();
+        }, 1500);
+    } else {
+        // Re-enable button on error
+        postBtn.disabled = false;
+        postBtn.textContent = 'Post';
+        showNotification('Failed to post. Please try again.', 'error');
+    }
 }
 
 function showSuccessMessage() {
