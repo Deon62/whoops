@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FailShare</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h2 class="page-title">My Profile</h2>
+                <button class="settings-btn">⚙️</button>
+            </div>
+        </header>
+        
+        <!-- Profile Content -->
+        <main class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar-large">👤</div>
+                <h2 class="profile-name">John Doe</h2>
+                <p class="profile-bio">Professional failure since 2020 | Learning from mistakes daily 🚀</p>
+                <button class="edit-profile-btn">Edit Profile</button>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <p class="stat-number">47</p>
+                    <p class="stat-label">Failures</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-number">892</p>
+                    <p class="stat-label">Supporters</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-number">1.2K</p>
+                    <p class="stat-label">Lessons</p>
+                </div>
+            </div>
+            
+            <div class="achievements-section">
+                <h3 class="section-title">Failure Badges 🏆</h3>
+                <div class="badges-grid">
+                    <div class="badge-item">
+                        <span class="badge-icon">🔥</span>
+                        <p class="badge-name">Hot Streak</p>
+                    </div>
+                    <div class="badge-item">
+                        <span class="badge-icon">💪</span>
+                        <p class="badge-name">Comeback Kid</p>
+                    </div>
+                    <div class="badge-item">
+                        <span class="badge-icon">🎯</span>
+                        <p class="badge-name">Lesson Master</p>
+                    </div>
+                    <div class="badge-item locked">
+                        <span class="badge-icon">🌟</span>
+                        <p class="badge-name">Epic Failure</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="posts-section">
+                <h3 class="section-title">My Recent Failures</h3>
+                
+                <div class="profile-post-card">
+                    <div class="post-date">2 days ago</div>
+                    <p class="post-text">Sent a personal email to the entire company. Still getting replies... 😅</p>
+                    <div class="post-stats">
+                        <span>❤️ 234</span>
+                        <span>💬 56</span>
+                    </div>
+                </div>
+                
+                <div class="profile-post-card">
+                    <div class="post-date">5 days ago</div>
+                    <p class="post-text">Studied for the wrong exam. Aced it anyway... but it was the wrong subject 🤦</p>
+                    <div class="post-stats">
+                        <span>❤️ 189</span>
+                        <span>💬 43</span>
+                    </div>
+                </div>
+                
+                <div class="profile-post-card">
+                    <div class="post-date">1 week ago</div>
+                    <p class="post-text">Wore my shirt inside out for an entire workday. Nobody told me. 💀</p>
+                    <div class="post-stats">
+                        <span>❤️ 456</span>
+                        <span>💬 89</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item" data-page="feed">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Feed</span>
+            </button>
+            <button class="nav-item" data-page="create">
+                <span class="nav-icon">➕</span>
+                <span class="nav-label">Post</span>
+            </button>
+            <button class="nav-item active" data-page="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+    </div>
+    
+    <script src="js/navigation.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
+

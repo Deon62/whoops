@@ -1,0 +1,237 @@
+/* Create Post Page Styles */
+.create-container {
+    padding: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+.create-card {
+    background-color: var(--secondary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Emoji Picker */
+.emoji-picker {
+    margin-bottom: 2rem;
+}
+
+.emoji-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.emoji-btn {
+    width: 50px;
+    height: 50px;
+    background-color: var(--background-light);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.emoji-btn:hover {
+    transform: scale(1.15);
+    border-color: var(--primary-color);
+}
+
+.emoji-btn.selected {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.failure-input,
+.lesson-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.failure-input:focus,
+.lesson-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(10, 29, 55, 0.1);
+}
+
+.failure-input {
+    min-height: 150px;
+    line-height: 1.6;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+/* Tags Input */
+.tags-input-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tag-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.tag-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(10, 29, 55, 0.1);
+}
+
+.add-tag-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-tag-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0.5rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+}
+
+.tags-list:empty::before {
+    content: 'No tags added yet';
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    animation: fadeIn 0.3s ease;
+}
+
+.remove-tag-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.remove-tag-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.action-buttons .btn-primary,
+.action-buttons .btn-secondary {
+    flex: 1;
+}
+
+.action-buttons .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Encouragement Text */
+.encouragement-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 1.5rem;
+    font-style: italic;
+}
+
+/* Success Message */
+.success-message {
+    background-color: #4caf50;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1rem;
+    animation: slideUp 0.5s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .create-container {
+        padding: 1rem;
+    }
+    
+    .create-card {
+        padding: 1.5rem;
+    }
+    
+    .emoji-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .tags-input-container {
+        flex-direction: column;
+    }
+    
+    .add-tag-btn {
+        width: 100%;
+    }
+}
+
