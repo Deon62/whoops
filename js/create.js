@@ -1,54 +1,32 @@
 // Create post page functionality
-let selectedEmoji = '';
-let tags = [];
-
 document.addEventListener('DOMContentLoaded', function() {
     initializeCreatePage();
 });
 
 function initializeCreatePage() {
-    // Initialize emoji picker
-    const emojiButtons = document.querySelectorAll('.emoji-btn');
-    emojiButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            selectEmoji(this);
-        });
-    });
-    
-    // Initialize character counter
+    // Initialize character counter and post button
     const failureInput = document.getElementById('failureText');
-    if (failureInput) {
-        failureInput.addEventListener('input', updateCharCount);
-    }
+    const postBtn = document.getElementById('postBtn');
     
-    // Initialize tag input
-    const tagInput = document.getElementById('tagInput');
-    if (tagInput) {
-        tagInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addTag();
-            }
+    if (failureInput) {
+        failureInput.addEventListener('input', function() {
+            updateCharCount();
+            togglePostButton();
         });
     }
 }
 
-function selectEmoji(button) {
-    // Remove previous selection
-    document.querySelectorAll('.emoji-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
+function togglePostButton() {
+    const text = document.getElementById('failureText').value.trim();
+    const postBtn = document.getElementById('postBtn');
     
-    // Add selection to clicked button
-    button.classList.add('selected');
-    selectedEmoji = button.getAttribute('data-emoji');
-    
-    // Add bounce animation
-    button.style.animation = 'none';
-    setTimeout(() => {
-        button.style.animation = 'bounce 0.5s ease';
-    }, 10);
+    if (text.length > 0 && text.length <= 500) {
+        postBtn.disabled = false;
+    } else {
+        postBtn.disabled = true;
+    }
 }
+
 
 function updateCharCount() {
     const text = document.getElementById('failureText').value;
@@ -67,56 +45,9 @@ function updateCharCount() {
     }
 }
 
-function addTag() {
-    const tagInput = document.getElementById('tagInput');
-    const tagText = tagInput.value.trim();
-    
-    if (tagText === '') return;
-    
-    // Add # if not present
-    const formattedTag = tagText.startsWith('#') ? tagText : '#' + tagText;
-    
-    // Check if tag already exists
-    if (tags.includes(formattedTag)) {
-        showNotification('Tag already added!', 'warning');
-        return;
-    }
-    
-    // Limit to 5 tags
-    if (tags.length >= 5) {
-        showNotification('Maximum 5 tags allowed!', 'warning');
-        return;
-    }
-    
-    tags.push(formattedTag);
-    renderTags();
-    tagInput.value = '';
-}
-
-function removeTag(index) {
-    tags.splice(index, 1);
-    renderTags();
-}
-
-function renderTags() {
-    const tagsList = document.getElementById('tagsList');
-    
-    if (tags.length === 0) {
-        tagsList.innerHTML = '';
-        return;
-    }
-    
-    tagsList.innerHTML = tags.map((tag, index) => `
-        <div class="tag-item">
-            <span>${tag}</span>
-            <button class="remove-tag-btn" onclick="removeTag(${index})">×</button>
-        </div>
-    `).join('');
-}
 
 function publishPost() {
     const failureText = document.getElementById('failureText').value.trim();
-    const lessonText = document.getElementById('lessonInput').value.trim();
     
     // Validation
     if (failureText === '') {
@@ -131,10 +62,7 @@ function publishPost() {
     
     // Create post object (in a real app, this would be sent to a backend)
     const post = {
-        emoji: selectedEmoji,
         text: failureText,
-        tags: tags,
-        lesson: lessonText,
         timestamp: new Date().toISOString()
     };
     
@@ -143,23 +71,14 @@ function publishPost() {
     // Show success message
     showSuccessMessage();
     
-    // Redirect to feed after 2 seconds
+    // Redirect to feed after 1.5 seconds
     setTimeout(() => {
         navigateToFeed();
-    }, 2000);
+    }, 1500);
 }
 
 function showSuccessMessage() {
-    const container = document.querySelector('.create-card');
-    
-    const successDiv = document.createElement('div');
-    successDiv.className = 'success-message';
-    successDiv.innerHTML = `
-        <h3>🎉 Your failure has been shared!</h3>
-        <p>Redirecting to feed...</p>
-    `;
-    
-    container.insertBefore(successDiv, container.firstChild);
+    showNotification('Your failure has been shared!', 'success');
 }
 
 function showNotification(message, type) {

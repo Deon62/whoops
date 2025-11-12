@@ -131,8 +131,7 @@
 /* Action Buttons */
 .action-buttons {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 0.75rem;
 }
 
 .action-buttons .btn-primary,
@@ -140,31 +139,15 @@
     flex: 1;
 }
 
-.action-buttons .btn-primary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+.action-buttons .btn-primary:disabled {
+    background-color: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
-/* Encouragement Text */
-.encouragement-text {
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-top: 1.5rem;
-    font-style: italic;
-}
-
-/* Success Message */
-.success-message {
-    background-color: #4caf50;
-    color: white;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 1rem;
-    animation: slideUp 0.5s ease;
+.action-buttons .btn-primary:disabled:hover {
+    transform: none;
+    background-color: var(--text-light);
 }
 
 /* Responsive Design */
