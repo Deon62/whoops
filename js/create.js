@@ -52,12 +52,12 @@ async function publishPost() {
     
     // Validation
     if (failureText === '') {
-        showNotification('Please share your failure story!', 'error');
+        showNotification('Please write something to share!', 'error');
         return;
     }
     
     if (failureText.length > 500) {
-        showNotification('Story is too long! Maximum 500 characters.', 'error');
+        showNotification('Post is too long! Maximum 500 characters.', 'error');
         return;
     }
     
@@ -85,7 +85,7 @@ async function publishPost() {
 }
 
 function showSuccessMessage() {
-    showNotification('Your failure has been shared!', 'success');
+    showNotification('Your post has been shared!', 'success');
 }
 
 function showNotification(message, type) {

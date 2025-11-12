@@ -142,7 +142,7 @@ async function loadUserPosts() {
     } else if (result.success && result.data.length === 0) {
         const emptyState = document.createElement('p');
         emptyState.className = 'empty-posts';
-        emptyState.textContent = 'No posts yet. Share your first failure!';
+        emptyState.textContent = 'No posts yet. Share your first post!';
         emptyState.style.textAlign = 'center';
         emptyState.style.color = 'var(--text-secondary)';
         emptyState.style.padding = '2rem';
@@ -153,11 +153,21 @@ async function loadUserPosts() {
 function createProfilePostCard(post) {
     const postCard = document.createElement('div');
     postCard.className = 'profile-post-card';
+    postCard.dataset.postId = post.id;
+    postCard.dataset.userId = post.user_id;
     
     const timeAgo = getTimeAgo(new Date(post.created_at));
     
     postCard.innerHTML = `
-        <div class="post-date">${timeAgo}</div>
+        <div class="post-header-profile">
+            <div class="post-date">${timeAgo}</div>
+            <button class="delete-post-btn-profile" title="Delete post">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+        </div>
         <p class="post-text">${escapeHtml(post.content)}</p>
         <div class="post-stats">
             <span>${post.likes} likes</span>
@@ -165,7 +175,93 @@ function createProfilePostCard(post) {
         </div>
     `;
     
+    // Add delete button listener
+    const deleteBtn = postCard.querySelector('.delete-post-btn-profile');
+    deleteBtn.addEventListener('click', () => handleDeleteProfilePost(postCard));
+    
     return postCard;
+}
+
+async function handleDeleteProfilePost(postCard) {
+    const postId = postCard.dataset.postId;
+    const userId = postCard.dataset.userId;
+    
+    // Show custom confirmation modal
+    const confirmed = await showConfirmModal();
+    
+    if (!confirmed) {
+        return;
+    }
+    
+    // Delete from database
+    const result = await deletePost(postId, userId);
+    
+    if (result.success) {
+        // Animate out and remove
+        postCard.style.transition = 'all 0.3s ease';
+        postCard.style.opacity = '0';
+        postCard.style.transform = 'translateX(100%)';
+        
+        setTimeout(() => {
+            postCard.remove();
+            
+            // Check if no posts left
+            const postsSection = document.querySelector('.posts-section');
+            const remainingPosts = postsSection.querySelectorAll('.profile-post-card');
+            
+            if (remainingPosts.length === 0) {
+                const emptyState = document.createElement('p');
+                emptyState.className = 'empty-posts';
+                emptyState.textContent = 'No posts yet. Share your first post!';
+                emptyState.style.textAlign = 'center';
+                emptyState.style.color = 'var(--text-secondary)';
+                emptyState.style.padding = '2rem';
+                postsSection.appendChild(emptyState);
+            }
+        }, 300);
+        
+        showNotification('Post deleted successfully', 'success');
+    } else {
+        showNotification('Failed to delete post. Please try again.', 'error');
+    }
+}
+
+function showConfirmModal() {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        const cancelBtn = document.getElementById('cancelDeleteBtn');
+        
+        modal.classList.add('show');
+        
+        const handleConfirm = () => {
+            modal.classList.remove('show');
+            cleanup();
+            resolve(true);
+        };
+        
+        const handleCancel = () => {
+            modal.classList.remove('show');
+            cleanup();
+            resolve(false);
+        };
+        
+        const cleanup = () => {
+            confirmBtn.removeEventListener('click', handleConfirm);
+            cancelBtn.removeEventListener('click', handleCancel);
+            modal.removeEventListener('click', handleBackdropClick);
+        };
+        
+        const handleBackdropClick = (e) => {
+            if (e.target === modal) {
+                handleCancel();
+            }
+        };
+        
+        confirmBtn.addEventListener('click', handleConfirm);
+        cancelBtn.addEventListener('click', handleCancel);
+        modal.addEventListener('click', handleBackdropClick);
+    });
 }
 
 function getTimeAgo(date) {

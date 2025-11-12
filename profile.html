@@ -9,6 +9,18 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Delete Confirmation Modal -->
+        <div class="confirm-modal" id="confirmModal">
+            <div class="confirm-modal-content">
+                <h3 class="confirm-title">Delete Post?</h3>
+                <p class="confirm-message">This action cannot be undone. Are you sure you want to delete this post?</p>
+                <div class="confirm-actions">
+                    <button class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                    <button class="btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Edit Profile Modal -->
         <div class="edit-modal" id="editModal">
             <div class="modal-content">

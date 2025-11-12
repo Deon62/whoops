@@ -20,7 +20,7 @@ async function loadPosts() {
     const postsList = document.getElementById('postsList');
     
     // Show loading state
-    postsList.innerHTML = '<div class="loading">Loading fails...</div>';
+    postsList.innerHTML = '<div class="loading">Loading posts...</div>';
     
     const result = await getPosts(50);
     
@@ -33,7 +33,7 @@ async function loadPosts() {
         // Initialize action buttons
         initializeActionButtons();
     } else if (result.success && result.data.length === 0) {
-        postsList.innerHTML = '<div class="empty-state">No failures yet. Be the first to share!</div>';
+        postsList.innerHTML = '<div class="empty-state">No posts yet. Be the first to share!</div>';
     } else {
         postsList.innerHTML = '<div class="error-state">Failed to load posts. Please refresh.</div>';
     }
@@ -73,9 +73,11 @@ function createPostElement(post) {
     const postCard = document.createElement('div');
     postCard.className = 'post-card';
     postCard.dataset.postId = post.id;
+    postCard.dataset.userId = post.user_id;
     
     const timeAgo = getTimeAgo(new Date(post.created_at));
-    const initials = getInitials(post.user_name);
+    const currentUser = getCurrentUser();
+    const isOwnPost = post.user_id === currentUser.userId;
     
     postCard.innerHTML = `
         <div class="post-header">
@@ -86,6 +88,14 @@ function createPostElement(post) {
                 <h3 class="user-name">${escapeHtml(post.user_name)}</h3>
                 <p class="post-time">${timeAgo}</p>
             </div>
+            ${isOwnPost ? `
+            <button class="delete-post-btn" data-action="delete" title="Delete post">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+            ` : ''}
         </div>
         <div class="post-content">
             <p class="post-text">${escapeHtml(post.content)}</p>
@@ -148,6 +158,17 @@ function initializeActionButtons() {
             handleActionClick(this);
         });
     });
+    
+    // Initialize delete buttons
+    const deleteButtons = document.querySelectorAll('.delete-post-btn');
+    deleteButtons.forEach(button => {
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        newButton.addEventListener('click', function(e) {
+            handleDeletePost(this);
+        });
+    });
 }
 
 async function handleActionClick(button) {
@@ -189,6 +210,87 @@ async function handleActionClick(button) {
     } else if (action === 'share') {
         showMessage('Share feature coming soon!');
     }
+}
+
+async function handleDeletePost(button) {
+    const postCard = button.closest('.post-card');
+    const postId = postCard.dataset.postId;
+    const userId = postCard.dataset.userId;
+    
+    // Show custom confirmation modal
+    const confirmed = await showConfirmModal();
+    
+    if (!confirmed) {
+        return;
+    }
+    
+    // Add deleting state
+    button.disabled = true;
+    button.style.opacity = '0.5';
+    
+    // Delete from database
+    const result = await deletePost(postId, userId);
+    
+    if (result.success) {
+        // Animate out and remove
+        postCard.style.transition = 'all 0.3s ease';
+        postCard.style.opacity = '0';
+        postCard.style.transform = 'translateX(-100%)';
+        
+        setTimeout(() => {
+            postCard.remove();
+            
+            // Check if feed is empty
+            const postsList = document.getElementById('postsList');
+            if (postsList.children.length === 0) {
+                postsList.innerHTML = '<div class="empty-state">No posts yet. Be the first to share!</div>';
+            }
+        }, 300);
+        
+        showMessage('Post deleted successfully');
+    } else {
+        button.disabled = false;
+        button.style.opacity = '1';
+        showMessage('Failed to delete post. Please try again.');
+    }
+}
+
+function showConfirmModal() {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        const cancelBtn = document.getElementById('cancelDeleteBtn');
+        
+        modal.classList.add('show');
+        
+        const handleConfirm = () => {
+            modal.classList.remove('show');
+            cleanup();
+            resolve(true);
+        };
+        
+        const handleCancel = () => {
+            modal.classList.remove('show');
+            cleanup();
+            resolve(false);
+        };
+        
+        const cleanup = () => {
+            confirmBtn.removeEventListener('click', handleConfirm);
+            cancelBtn.removeEventListener('click', handleCancel);
+            modal.removeEventListener('click', handleBackdropClick);
+        };
+        
+        const handleBackdropClick = (e) => {
+            if (e.target === modal) {
+                handleCancel();
+            }
+        };
+        
+        confirmBtn.addEventListener('click', handleConfirm);
+        cancelBtn.addEventListener('click', handleCancel);
+        modal.addEventListener('click', handleBackdropClick);
+    });
 }
 
 function animatePosts() {
