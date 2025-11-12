@@ -1,4 +1,7 @@
 // Feed page functionality
+let hasNewPosts = false;
+let newPostsCount = 0;
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeFeed();
 });
@@ -9,11 +12,63 @@ async function initializeFeed() {
     
     // Subscribe to real-time updates
     subscribeToNewPosts((newPost) => {
-        prependPost(newPost);
+        // Show refresh button instead of auto-prepending
+        hasNewPosts = true;
+        newPostsCount++;
+        showRefreshButton();
     });
     
     // Add animation to posts on load
     animatePosts();
+    
+    // Show refresh button periodically (every 30 seconds)
+    setInterval(() => {
+        if (Math.random() > 0.7) { // 30% chance to show
+            showRefreshButton();
+        }
+    }, 30000);
+}
+
+function showRefreshButton() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn && !refreshBtn.classList.contains('show')) {
+        refreshBtn.classList.add('show');
+        
+        // Update text if we know the count
+        if (newPostsCount > 0) {
+            refreshBtn.querySelector('span').textContent = 
+                newPostsCount === 1 ? '1 new post' : `${newPostsCount} new posts`;
+        }
+    }
+}
+
+function hideRefreshButton() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.classList.remove('show');
+    }
+}
+
+async function refreshFeed() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    
+    // Add spinning animation
+    refreshBtn.classList.add('refreshing');
+    refreshBtn.querySelector('span').textContent = 'Refreshing...';
+    
+    // Reload posts
+    await loadPosts();
+    
+    // Reset counter
+    newPostsCount = 0;
+    hasNewPosts = false;
+    
+    // Remove spinning and hide button
+    setTimeout(() => {
+        refreshBtn.classList.remove('refreshing');
+        refreshBtn.querySelector('span').textContent = 'New posts';
+        hideRefreshButton();
+    }, 500);
 }
 
 async function loadPosts() {
@@ -67,6 +122,9 @@ function prependPost(post) {
     }, 10);
     
     initializeActionButtons();
+    
+    // Scroll to top smoothly to show new post
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function createPostElement(post) {

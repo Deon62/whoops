@@ -4,6 +4,76 @@
     padding-bottom: 1.5rem;
 }
 
+/* Refresh Button */
+.refresh-btn {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(10, 29, 55, 0.3);
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.refresh-btn.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+    animation: slideDown 0.4s ease;
+}
+
+.refresh-btn:hover {
+    background-color: var(--accent-color);
+    transform: translateX(-50%) translateY(0) scale(1.05);
+    box-shadow: 0 6px 16px rgba(10, 29, 55, 0.4);
+}
+
+.refresh-btn:active {
+    transform: translateX(-50%) translateY(0) scale(0.98);
+}
+
+.refresh-btn svg {
+    animation: none;
+}
+
+.refresh-btn.refreshing svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .feed-header {
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
@@ -301,6 +371,12 @@
     .action-btn {
         padding: 0.5rem;
         font-size: 0.85rem;
+    }
+    
+    .refresh-btn {
+        top: 10px;
+        padding: 0.65rem 1.25rem;
+        font-size: 0.8rem;
     }
 }
 
