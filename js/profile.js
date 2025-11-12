@@ -1,39 +1,99 @@
 // Profile page functionality
+let selectedAvatar = 'ic.png';
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeProfile();
 });
 
 function initializeProfile() {
-    // Initialize edit profile button
-    const editBtn = document.querySelector('.edit-profile-btn');
-    if (editBtn) {
-        editBtn.addEventListener('click', handleEditProfile);
-    }
+    // Load saved profile data
+    loadProfile();
     
-    // Initialize settings button
-    const settingsBtn = document.querySelector('.settings-btn');
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', handleSettings);
-    }
-    
-    // Add click handlers to badges
-    const badges = document.querySelectorAll('.badge-item:not(.locked)');
-    badges.forEach(badge => {
-        badge.addEventListener('click', function() {
-            showBadgeInfo(this);
-        });
-    });
-    
-    // Add click handlers to stats
-    const statBoxes = document.querySelectorAll('.stat-box');
-    statBoxes.forEach(box => {
-        box.addEventListener('click', function() {
-            handleStatClick(this);
+    // Initialize avatar selection
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    avatarOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            selectAvatar(this);
         });
     });
     
     // Animate profile elements on load
     animateProfile();
+}
+
+function loadProfile() {
+    const savedName = localStorage.getItem('userName') || 'John Doe';
+    const savedAvatar = localStorage.getItem('userAvatar') || 'ic.png';
+    
+    document.getElementById('profileName').textContent = savedName;
+    document.getElementById('avatarImage').src = `profiles/${savedAvatar}`;
+    selectedAvatar = savedAvatar;
+}
+
+function openEditModal() {
+    const modal = document.getElementById('editModal');
+    const nameInput = document.getElementById('nameInput');
+    
+    // Load current values
+    nameInput.value = document.getElementById('profileName').textContent;
+    
+    // Highlight current avatar
+    document.querySelectorAll('.avatar-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.getAttribute('data-avatar') === selectedAvatar) {
+            option.classList.add('selected');
+        }
+    });
+    
+    modal.classList.add('show');
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('show');
+}
+
+function selectAvatar(element) {
+    // Remove selection from all avatars
+    document.querySelectorAll('.avatar-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Add selection to clicked avatar
+    element.classList.add('selected');
+    selectedAvatar = element.getAttribute('data-avatar');
+}
+
+function saveProfile() {
+    const nameInput = document.getElementById('nameInput');
+    const newName = nameInput.value.trim();
+    
+    if (newName === '') {
+        showNotification('Please enter a name', 'error');
+        return;
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('userName', newName);
+    localStorage.setItem('userAvatar', selectedAvatar);
+    
+    // Update UI
+    document.getElementById('profileName').textContent = newName;
+    document.getElementById('avatarImage').src = `profiles/${selectedAvatar}`;
+    
+    // Close modal
+    closeEditModal();
+    
+    // Show success message
+    showNotification('Profile updated successfully!', 'success');
+}
+
+function handleEditProfile() {
+    openEditModal();
+}
+
+function handleSettings() {
+    showNotification('Settings feature coming soon!', 'info');
 }
 
 function handleEditProfile() {
@@ -44,43 +104,6 @@ function handleSettings() {
     showNotification('Settings feature coming soon! ⚙️', 'info');
 }
 
-function showBadgeInfo(badge) {
-    const badgeName = badge.querySelector('.badge-name').textContent;
-    const badgeIcon = badge.querySelector('.badge-icon').textContent;
-    
-    // Add pulse animation
-    badge.style.animation = 'pulse 0.5s ease';
-    setTimeout(() => {
-        badge.style.animation = '';
-    }, 500);
-    
-    const messages = {
-        'Hot Streak': 'Posted 5 failures in a row! 🔥',
-        'Comeback Kid': 'Shared a lesson learned from a failure! 💪',
-        'Lesson Master': 'Helped 50 people learn from your failures! 🎯',
-        'Epic Failure': 'Share 100 failures to unlock this badge! 🌟'
-    };
-    
-    showNotification(`${badgeIcon} ${badgeName}: ${messages[badgeName] || 'Keep going!'}`, 'success');
-}
-
-function handleStatClick(statBox) {
-    const label = statBox.querySelector('.stat-label').textContent;
-    
-    // Add bounce animation
-    statBox.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        statBox.style.transform = 'scale(1)';
-    }, 100);
-    
-    const messages = {
-        'Failures': 'View all your shared failures',
-        'Supporters': 'See who supports you',
-        'Lessons': 'View all lessons learned'
-    };
-    
-    showNotification(messages[label] || 'Feature coming soon!', 'info');
-}
 
 function animateProfile() {
     // Animate stats
